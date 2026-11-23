@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Азкары</title>
+<meta name="description" content="Азкары утра, вечера и перед сном: арабский текст, транскрипция, чеченский и русский перевод, хадисы и счётчик.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#1f5a46">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Азкары">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@400;700&display=swap">
+<style>
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;padding:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+:root{
+  --bg:#f3f0e6; --surface:#fffdf7; --ink:#1d2420; --muted:#6b6a5c; --line:#ddd5bf;
+  --green:#1f5a46; --green-soft:#e3ece6; --gold:#a8771f; --gold-soft:#f4ead3; --done:#2f7a52;
+  --f-ar:'Amiri Quran','Amiri','Scheherazade New',serif;
+  --f-serif:'PT Serif',Georgia,serif;
+  --f-sans:'PT Sans','Segoe UI',system-ui,sans-serif;
+  --ar-size:30px; color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111814; --surface:#18221d; --ink:#ece8dc; --muted:#a3a593; --line:#2c3a32;
+  --green:#7cc3a2; --green-soft:#1f2f27; --gold:#e0b45e; --gold-soft:#2c271b; --done:#79c99a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111814; --surface:#18221d; --ink:#ece8dc; --muted:#a3a593; --line:#2c3a32;
+  --green:#7cc3a2; --green-soft:#1f2f27; --gold:#e0b45e; --gold-soft:#2c271b; --done:#79c99a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-sans);font-size:16px;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:640px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px}
+header.top{display:flex;flex-direction:column;gap:6px;padding-block:8px 14px}
+.bism{font-family:var(--f-ar);font-size:26px;color:var(--green);text-align:center;direction:rtl;line-height:1.7}
+h1{font-family:var(--f-serif);font-size:24px;margin:0;text-align:center;color:var(--ink);text-wrap:balance}
+.date{text-align:center;color:var(--muted);font-size:14px}
+.orn{display:block;width:100%;max-width:360px;margin:6px auto 0;height:18px}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
+.seg{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+.seg button{font:700 15px var(--f-sans);border:0;border-radius:9px;padding:9px 4px;background:transparent;color:var(--muted);cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:5px}
+.seg button[aria-pressed="true"]{background:var(--green);color:var(--surface)}
+.seg .cnt{font-weight:400;font-size:13px;opacity:.85;font-variant-numeric:tabular-nums}
+.prog{display:flex;align-items:center;gap:10px}
+.track{flex:1;height:8px;background:var(--line);border-radius:6px;overflow:hidden}
+.fill{height:100%;background:var(--gold);width:0;transition:width .35s}
+.prog span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chip{font:14px var(--f-sans);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:20px;padding:6px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--green-soft);border-color:var(--green);color:var(--green);font-weight:700}
+.tools .sp{flex:1}
+.week{display:flex;justify-content:space-between;gap:4px;margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 10px}
+.day{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;min-width:0}
+.day b{font-size:11px;color:var(--muted);font-weight:400;text-transform:uppercase;letter-spacing:.05em}
+.dot{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);overflow:hidden;display:flex}
+.dot i{flex:1}
+.dot i.on{background:var(--gold)}
+.dot i.on.e{background:var(--green)}
+.day.today b{color:var(--ink);font-weight:700}
+.streak{text-align:center;font-size:13px;color:var(--muted);margin-top:8px}
+.streak strong{color:var(--gold)}
+.list{display:flex;flex-direction:column;gap:14px;margin-top:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;display:flex;flex-direction:column;gap:10px;scroll-margin-top:170px;transition:opacity .3s}
+.card.done{opacity:.62}
+.chead{display:flex;align-items:center;gap:10px}
+.num{width:30px;height:30px;border-radius:50%;background:var(--green);color:var(--surface);font:700 14px var(--f-sans);display:flex;align-items:center;justify-content:center;flex:none}
+.card.done .num{background:var(--done)}
+.cname{flex:1;min-width:0;font:700 17px var(--f-serif);color:var(--green)}
+.times{font:700 13px var(--f-sans);color:var(--gold);background:var(--gold-soft);padding:4px 10px;border-radius:12px;white-space:nowrap}
+.ar{font-family:var(--f-ar);font-size:var(--ar-size);line-height:2.05;direction:rtl;text-align:right;white-space:pre-line;color:var(--ink)}
+.lab{font:700 11px var(--f-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
+.tr{font-family:var(--f-serif);font-style:italic;color:var(--muted);line-height:1.5;font-size:15px}
+.mean{font-family:var(--f-serif);line-height:1.5;font-size:16px}
+details{border-top:1px dashed var(--line);padding-top:8px}
+summary{cursor:pointer;font:700 13px var(--f-sans);color:var(--green);list-style:none;display:flex;align-items:center;gap:6px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"›";display:inline-block;transition:transform .2s;font-size:18px;line-height:1}
+details[open] summary::before{transform:rotate(90deg)}
+.had{font-family:var(--f-serif);font-size:15px;line-height:1.55;margin-top:6px;background:var(--green-soft);padding:10px 12px;border-radius:10px}
+.src{font-size:12.5px;color:var(--muted);margin-top:6px;font-family:var(--f-sans)}
+.tap{margin-top:4px;border:0;border-radius:14px;background:var(--green);color:var(--surface);padding:14px;font:700 18px var(--f-sans);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;user-select:none;touch-action:manipulation;position:relative;overflow:hidden}
+.tap .n{font-size:26px;font-variant-numeric:tabular-nums;min-width:2.5ch}
+.tap:active{transform:scale(.985)}
+.card.done .tap{background:var(--green-soft);color:var(--done)}
+.tap:focus-visible,.chip:focus-visible,.seg button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.mini{display:flex;justify-content:flex-end;gap:8px;align-items:center}
+.undo{font:13px var(--f-sans);background:none;border:0;color:var(--muted);cursor:pointer;padding:2px 4px;text-decoration:underline}
+.fsbtn{margin-right:auto;font-size:13px;padding:5px 10px}
+.finish{display:none;text-align:center;background:var(--gold-soft);border:1px solid var(--gold);border-radius:16px;padding:18px;margin-top:16px}
+.finish.show{display:block}
+.finish .ar{text-align:center;font-size:26px}
+.finish p{margin:4px 0 0;font-family:var(--f-serif)}
+.foot{text-align:center;color:var(--muted);font-size:12.5px;margin-top:22px;line-height:1.5}
+.reset{display:inline-block;margin-top:8px}
+.pt{font-size:12.5px}
+.focus{position:fixed;inset:0;z-index:50;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:calc(env(safe-area-inset-top,0px) + 60px) 24px calc(env(safe-area-inset-bottom,0px) + 30px);user-select:none;-webkit-user-select:none;touch-action:manipulation;cursor:pointer;text-align:center}
+.fname{font:700 20px var(--f-serif);color:var(--green)}
+.far{font-family:var(--f-ar);font-size:30px;line-height:1.9;direction:rtl;max-width:600px}
+.fn{font:700 112px var(--f-sans);color:var(--green);font-variant-numeric:tabular-nums;line-height:1}
+.fhint{color:var(--muted);font-size:14px}
+.fx{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:16px;font:20px var(--f-sans);width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="bism">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+  <h1>Азкараш</h1>
+  <div class="date" id="date"></div>
+  <div class="date pt" id="ptimes"></div>
+  <svg class="orn" viewBox="0 0 360 18" aria-hidden="true"><g fill="none" stroke="var(--gold)" stroke-width="1.2" stroke-linecap="round">
+    <line x1="10" y1="9" x2="150" y2="9"/><line x1="210" y1="9" x2="350" y2="9"/>
+    <path d="M180 16 C180 6,166 2,166 9 C166 13,172 13,172 9"/><path d="M180 16 C180 6,194 2,194 9 C194 13,188 13,188 9"/></g>
+    <path d="M10 5 L14 9 L10 13 L6 9Z M350 5 L354 9 L350 13 L346 9Z" fill="var(--gold)"/></svg>
+  <div class="week" id="week" aria-label="Последние 7 дней"></div>
+  <div class="streak" id="streak"></div>
+</header>
+
+<div class="bar">
+  <div class="seg" role="group" aria-label="Время">
+    <button id="bm" aria-pressed="true">☀ Ӏуьйре <span class="cnt" id="cm"></span></button>
+    <button id="be" aria-pressed="false">☾ Суьйре <span class="cnt" id="cev"></span></button>
+    <button id="bs" aria-pressed="false">✦ Наб <span class="cnt" id="cs"></span></button>
+  </div>
+  <div class="prog"><div class="track"><div class="fill" id="fill"></div></div><span id="ptext"></span></div>
+  <div class="tools">
+    <button class="chip" id="lce" aria-pressed="true">Нохчийн</button>
+    <button class="chip" id="lru" aria-pressed="false">Русский</button>
+    <button class="chip" id="ltr" aria-pressed="true">Транскрипция</button>
+    <button class="chip" id="theme" aria-label="Тема">◐ Авто</button>
+    <span class="sp"></span>
+    <button class="chip" id="fminus" aria-label="Меньше арабский шрифт">A−</button>
+    <button class="chip" id="fplus" aria-label="Больше арабский шрифт">A+</button>
+  </div>
+</div>
+
+<div class="list" id="list"></div>
+
+<div class="finish" id="finish">
+  <div class="ar">الْحَمْدُ لِلَّهِ</div>
+  <p id="fintext">Хастам Аллахна! Азкараш чекхбаьхна.</p>
+</div>
+
+<div class="foot">
+  Нажимайте на зелёную кнопку при каждом прочтении — счётчик сам перейдёт к следующему зикру.<br>
+  Прогресс сохраняется на этом телефоне и обнуляется каждый новый день. Работает и без интернета.<br>
+  <button class="undo reset" id="reset">Сбросить сегодняшнее <span id="rlabel">утро</span></button>
+</div>
+</div>
+<div class="focus" id="focus" hidden><button class="fx" id="fclose" aria-label="Закрыть">✕</button><div class="fname" id="fname"></div><div class="far" id="far"></div><div class="fn" id="fn"></div><div class="fhint">Нажимайте в любом месте экрана</div></div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
